@@ -13,7 +13,12 @@ metadata:
     # NGINX keep-alive is set to 75s. If using WebSockets, the value will need to be
     # increased to '3600' to avoid any potential issues.
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "60"
-    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    # Note that the backend talks over HTTP.
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    # TODO: Fill in with the ARN of your certificate.
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:879521958254:certificate/13223eb8-2b81-4cd6-8363-b753ba19b2de
+    # Only run SSL on the port named "https" below.
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
 
 spec:
   type: LoadBalancer
@@ -26,6 +31,6 @@ spec:
       targetPort: http
     - name: https
       port: 443
-      targetPort: https
+      targetPort: http
 
 ---
